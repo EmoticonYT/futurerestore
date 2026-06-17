@@ -17,7 +17,6 @@ jobs:
   macOS:
     env:
       PROCURSUS: /opt/procursus
-      # Prefixed with standard Homebrew locations for both Intel and Apple Silicon runners
       PATH: /opt/homebrew/bin:/usr/local/bin:/opt/procursus/bin:/opt/procursus/libexec/gnubin:/usr/local/lib/ruby/gems/2.7.0/bin:/usr/local/opt/ruby@2.7/bin:/usr/local/opt/pipx_bin:/Users/runner/.cargo/bin:/usr/local/opt/curl/bin:/Users/runner/bin:/Users/runner/.yarn/bin:/Users/runner/Library/Android/sdk/tools:/Users/runner/Library/Android/sdk/platform-tools:/Users/runner/Library/Android/sdk/ndk-bundle:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/usr/bin:/bin:/usr/sbin:/sbin:/Users/runner/.dotnet/tools:/Users/runner/.ghcup/bin:/Users/runner/hostedtoolcache/stack/2.7.3/x64
     runs-on: macos-latest
     steps:
@@ -35,8 +34,10 @@ jobs:
     - name: Install Build Dependencies
       id: Install-Deps
       run: |
-        echo "Installing gnu-tar and cmake..."
-        brew install gnu-tar cmake
+        echo "Installing gnu-tar, cmake, and iOS device libraries..."
+        brew install gnu-tar cmake libplist libimobiledevice libirecovery openssl
+        echo "CMAKE_PREFIX_PATH=/opt/homebrew" >> $GITHUB_ENV
+        echo "PKG_CONFIG_PATH=/opt/homebrew/lib/pkgconfig" >> $GITHUB_ENV
     - name: macOS Build
       id: macOS-Build
       run: |
